@@ -19,12 +19,15 @@ class ViewController: UIViewController {
                 if error != nil {
                     print(error!)
                 } else {
-                    if let responseString = String(data: data!, encoding: .utf8) {
+                    do {
+                        let responseObject = try JSONSerialization.jsonObject(with: data!, options: .allowFragments) as? [[String: Any]]
                         DispatchQueue.main.async {
-                            print(responseString)
-                            self.jokeLabel.text = responseString
+                            self.jokeLabel.text = (responseObject![0]["text"] as! String)
+                            print(responseObject)
                             self.jokeLabel.font = self.jokeLabel.font.withSize(12)
                         }
+                    } catch let error as NSError {
+                        print(error)
                     }
                 }
             }
@@ -36,4 +39,12 @@ class ViewController: UIViewController {
         // Do any additional setup after loading the view, typically from a nib.
     }
 }
+
+//                    if let responseString = String(data: data!, encoding: .utf8) {
+//                        DispatchQueue.main.async {
+//                            print(responseString)
+//                            self.jokeLabel.text = responseString
+//                            self.jokeLabel.font = self.jokeLabel.font.withSize(12)
+//                        }
+//                    }
 
